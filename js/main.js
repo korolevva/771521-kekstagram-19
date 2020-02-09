@@ -1,8 +1,8 @@
 'use strict';
 
-var MASSAGES = ['Всё отлично!', 'В целом всё неплохо. Но не всё.', 'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.', 'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.', 'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.', 'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'];
-
+var MESSAGES = ['Всё отлично!', 'В целом всё неплохо. Но не всё.', 'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.', 'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.', 'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.', 'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'];
 var NAMES = ['Иван', 'Хуан Себастьян', 'Мария', 'Кристоф', 'Виктор', 'Юлия', 'Люпита', 'Вашингтон'];
+var NUMBER_OBJECTS = 25;
 
 var usersPictures = document.querySelector('.pictures');
 var pictureTemplate = document.querySelector('#picture')
@@ -17,19 +17,34 @@ function getRandomInt(min, max) {
 }
 
 function getComments() {
-  var comment = {
-    avatar: 'img/avatar-' + getRandomInt(1, 6) + '.svg',
-    message: (getRandomInt(0, 1) === 0) ? MASSAGES[getRandomInt(0, MASSAGES.length - 1)] : MASSAGES[getRandomInt(0, MASSAGES.length - 1)] + ' ' + MASSAGES[getRandomInt(0, MASSAGES.length - 1)],
-    name: NAMES[getRandomInt(0, NAMES.length - 1)]
-  };
-
   var arrayOfComments = [];
 
   for (i = 0; i < getRandomInt(1, 10); i++) {
-    arrayOfComments.push(comment);
+    arrayOfComments.push({
+      avatar: 'img/avatar-' + getRandomInt(1, 6) + '.svg',
+      message: generateMessage(MESSAGES),
+      name: NAMES[getRandomInt(0, NAMES.length - 1)]
+    });
   }
 
   return arrayOfComments;
+}
+
+function generateMessage(array) {
+  var arrayMessages = array.slice();
+  if (getRandomInt(0, 1) === 0) {
+    var randomMassage = getRandomInt(0, arrayMessages.length - 1);
+    return arrayMessages[randomMassage];
+  } else {
+    var numberFirstRandomMessage = getRandomInt(0, arrayMessages.length - 1);
+    var firstRandomMessage = arrayMessages[numberFirstRandomMessage];
+
+    arrayMessages.splice(numberFirstRandomMessage, 1);
+
+    var numberSecondRandomMessage = getRandomInt(0, arrayMessages.length - 1);
+    var secondRandomMessage = arrayMessages[numberSecondRandomMessage];
+    return firstRandomMessage + ' ' + secondRandomMessage;
+  }
 }
 
 function createArrayOfObjects(countObjects) {
@@ -42,7 +57,7 @@ function createArrayOfObjects(countObjects) {
   return arr;
 }
 
-var pictures = createArrayOfObjects(25);
+var pictures = createArrayOfObjects(NUMBER_OBJECTS);
 
 var createPicture = function (picture) {
   var pictureElement = pictureTemplate.cloneNode(true);
