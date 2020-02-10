@@ -3,11 +3,32 @@
 var MESSAGES = ['Всё отлично!', 'В целом всё неплохо. Но не всё.', 'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.', 'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.', 'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.', 'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'];
 var NAMES = ['Иван', 'Хуан Себастьян', 'Мария', 'Кристоф', 'Виктор', 'Юлия', 'Люпита', 'Вашингтон'];
 var NUMBER_OBJECTS = 25;
+var FIRST_BIG_PICTURE = 1;
 
 var usersPictures = document.querySelector('.pictures');
 var pictureTemplate = document.querySelector('#picture')
   .content
   .querySelector('.picture');
+
+var usersBigPictures = document.querySelector('.big-picture');
+usersBigPictures.classList.remove('hidden');
+
+var bigPicturesImg = usersBigPictures.querySelector('.big-picture__img').firstElementChild;
+var bigPicturesLikesCount = usersBigPictures.querySelector('.likes-count');
+var bigPicturesCommentsCount = usersBigPictures.querySelector('.comments-count');
+var bigPicturesComments = usersBigPictures.querySelector('.social__comments');
+var bigPictureAvatars = bigPicturesComments.querySelectorAll('.social__picture');
+var bigPictureTextCommments = bigPicturesComments.querySelectorAll('.social__text');
+var bigPictureCaption = usersBigPictures.querySelector('.social__caption');
+
+var bigPictureCommentCounter = usersBigPictures.querySelector('.social__comment-count');
+bigPictureCommentCounter.classList.add('hidden');
+
+var bigPictureCommentsloader = usersBigPictures.querySelector('.comments-loader');
+bigPictureCommentsloader.classList.add('hidden');
+
+var body = document.querySelector('body');
+body.classList.add('modal-open');
 
 function getRandomInt(min, max) {
   min = Math.ceil(min);
@@ -19,7 +40,7 @@ function getRandomInt(min, max) {
 function getComments() {
   var arrayOfComments = [];
 
-  for (i = 0; i < getRandomInt(1, 10); i++) {
+  for (i = 0; i < getRandomInt(5, 10); i++) {
     arrayOfComments.push({
       avatar: 'img/avatar-' + getRandomInt(1, 6) + '.svg',
       message: generateMessage(MESSAGES),
@@ -58,6 +79,27 @@ function createArrayOfObjects(countObjects) {
 }
 
 var pictures = createArrayOfObjects(NUMBER_OBJECTS);
+
+function fillBigPicture(picturesArray) {
+  for (var i = 0; i < FIRST_BIG_PICTURE; i++) {
+    bigPicturesImg.src = picturesArray[i].url;
+    bigPicturesLikesCount.textContent = picturesArray[i].likes;
+    bigPicturesCommentsCount.textContent = picturesArray[i].comments.length;
+
+    for (var j = 0; j < bigPictureAvatars.length; j++) {
+      bigPictureAvatars[j].src = picturesArray[j].comments[j].avatar;
+      bigPictureAvatars[j].alt = picturesArray[j].comments[j].name;
+    }
+
+    for (var k = 0; k < bigPictureTextCommments.length; k++) {
+      bigPictureTextCommments[k].textContent = picturesArray[k].comments[k].message;
+    }
+
+    bigPictureCaption.textContent = picturesArray[i].description;
+  }
+}
+
+fillBigPicture(pictures);
 
 var createPicture = function (picture) {
   var pictureElement = pictureTemplate.cloneNode(true);
