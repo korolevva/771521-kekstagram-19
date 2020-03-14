@@ -1,6 +1,5 @@
 'use strict';
 (function () {
-
   var scaleControlValue = document.querySelector('.scale__control--value');
   var previewImage = document.querySelector('.img-upload__preview img');
   var effectsList = document.querySelector('.effects__list');
@@ -12,11 +11,6 @@
   var effectLevelValue = document.querySelector('.effect-level__value');
   var effectLevelDepth = document.querySelector('.effect-level__depth');
   var currentEffect;
-
-  window.form = {
-    scaleControlValue: scaleControlValue,
-    previewImage: previewImage
-  };
 
   var getIntensityValue = function () {
     var coordsLine = effectLevelLine.getBoundingClientRect();
@@ -63,11 +57,13 @@
     }
   }
 
-  function resetEffect() {
-    previewImage.classList.remove(currentEffect);
+  var resetEffect = function () {
+    if (previewImage.className !== '') {
+      previewImage.classList.remove(previewImage.className);
+      previewImage.style.filter = '';
+    }
     effectLevelFieldset.classList.add('hidden');
-    previewImage.style.filter = '';
-  }
+  };
 
   function onChangeFilter(evt) {
     var inputRadio = evt.target;
@@ -138,4 +134,11 @@
   };
 
   effectLevelPin.addEventListener('mousedown', onPinMouseDown);
+
+  window.form = {
+    scaleControlValue: scaleControlValue,
+    previewImage: previewImage,
+    currentEffect: currentEffect,
+    resetEffect: resetEffect
+  };
 })();

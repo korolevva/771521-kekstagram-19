@@ -2,22 +2,8 @@
 (function () {
   var hashtagInput = document.querySelector('.text__hashtags');
   var textDescription = document.querySelector('.text__description');
-  function onTextHashtagInput(evt) {
-    var textHashtags = evt.target;
-    var tags = textHashtags.value.split(window.data.SEPARATOR);
-    if (tags.length > window.data.MAX_TAGS_COUNT) {
-      textHashtags.setCustomValidity('Неверный формат ввода хэштегов');
-    } else {
-      var isFormValid = true;
-      for (var i = 0; i < tags.length; i++) {
-        var tag = tags[i];
-        if (!isTagValid(tag, tags)) {
-          isFormValid = false;
-        }
-      }
-      textHashtags.setCustomValidity(isFormValid ? '' : 'Неверный формат ввода хэштегов');
-    }
-  }
+  var submitButton = document.querySelector('.img-upload__submit');
+  var form = document.querySelector('.img-upload__form');
 
   function filterItems(array, query) {
     return array.filter(function (el) {
@@ -37,11 +23,126 @@
     }
   }
 
-  function onTextDescriptionInput(evt) {
-    var textLength = evt.target.value.length;
-    textDescription.setCustomValidity(textLength > window.data.MAX_LENGTH_TEXT_DESCRIPTION ? 'Сообщение не должно превышать 140 символов' : '');
+  function isHashtagValid() {
+    var tags = hashtagInput.value.split(window.data.SEPARATOR);
+    var isEmpty = hashtagInput.value.length === 0;
+    if (tags.length > window.data.MAX_TAGS_COUNT) {
+      return false;
+    } else {
+      var isValid = true;
+      for (var i = 0; i < tags.length; i++) {
+        var tag = tags[i];
+        if (!isTagValid(tag, tags)) {
+          isValid = false;
+        }
+      }
+      return isEmpty || isValid;
+    }
   }
 
-  hashtagInput.addEventListener('input', onTextHashtagInput);
-  textDescription.addEventListener('input', onTextDescriptionInput);
+  submitButton.addEventListener('click', function () {
+    if (!isHashtagValid()) {
+      hashtagInput.style.outline = '3px solid red';
+      hashtagInput.setCustomValidity('Неверный формат ввода хэштегов');
+    } else {
+      hashtagInput.style.outline = '';
+      hashtagInput.setCustomValidity('');
+    }
+  });
+
+  function resetFieldsForm() {
+    hashtagInput.value = '';
+    textDescription.value = '';
+  }
+
+  function resetParametersForm() {
+    window.form.resetEffect();
+    resetFieldsForm();
+    window.openForm.uploadFileOpen.value = '';
+  }
+
+  var successMessageTemplate = document.querySelector('#success').content.querySelector('.success');
+  var errorMessageTemplate = document.querySelector('#error').content.querySelector('.error');
+
+  var createMessage = function (messageTemplate) {
+    var messageElement = messageTemplate.cloneNode(true);
+    return messageElement;
+  };
+
+  var showMassage = function (massage) {
+    var main = document.querySelector('main');
+    main.insertAdjacentElement('afterbegin', massage);
+  };
+
+  var onButtonClick = function (massage) {
+    massage.classList.add('visually-hidden');
+    resetParametersForm();
+  };
+
+  var onMassageClick = function (evt, massage) {
+    if (evt.target.className !== 'success__inner') {
+      massage.classList.add('visually-hidden');
+      resetParametersForm();
+    }
+  };
+
+  var onMassageEsсPress = function (evt, massage) {
+    if (evt.key === window.data.ESC_KEY) {
+      massage.classList.add('visually-hidden');
+      resetParametersForm();
+    }
+  };
+
+  var onSuccessSendForm = function () {
+    window.openForm.imageEditingForm.classList.add('hidden');
+    var message = createMessage(successMessageTemplate);
+    showMassage(message);
+    var button = document.querySelector('.success__button');
+
+    button.addEventListener('click', function () {
+      onButtonClick(message);
+    });
+
+    message.addEventListener('click', function (evt) {
+      onMassageClick(evt, message);
+    });
+
+    document.addEventListener('keydown', function (evt) {
+      onMassageEsсPress(evt, message);
+
+      document.removeEventListener('keydown', function () {
+        onMassageEsсPress(evt, message);
+      });
+    });
+
+  };
+
+  var onError = function () {
+    window.openForm.imageEditingForm.classList.add('hidden');
+    var message = createMessage(errorMessageTemplate);
+    showMassage(message);
+    var button = document.querySelector('.error__button');
+
+    button.addEventListener('click', function () {
+      onButtonClick(message);
+    });
+
+    message.addEventListener('click', function (evt) {
+      onMassageClick(evt, message);
+    });
+
+    document.addEventListener('keydown', function (evt) {
+      onMassageEsсPress(evt, message);
+
+      document.removeEventListener('keydown', function () {
+        onMassageEsсPress(evt, message);
+      });
+    });
+
+  };
+
+  form.addEventListener('submit', function (evt) {
+    evt.preventDefault();
+    window.backend.send(new FormData(form), onSuccessSendForm, onError);
+  });
 })();
