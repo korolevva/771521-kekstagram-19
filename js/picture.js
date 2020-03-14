@@ -20,4 +20,11 @@
     }
     window.data.usersPictures.appendChild(fragment);
   };
+
+  var onLoad = function (data) {
+    window.addPictures(data);
+    window.clickBigPicture(data);
+  };
+
+  window.backend.load(onLoad);
 })();
