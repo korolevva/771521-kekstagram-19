@@ -1,10 +1,10 @@
 'use strict';
 (function () {
-  var COUNT_RANDOM_PICTURES = 10;
   var pictures = [];
   var originalPictures = [];
   var randomPictures = [];
   var discussedPictures = [];
+
   var createPicture = function (picture) {
     var pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
     var pictureElement = pictureTemplate.cloneNode(true);
@@ -19,16 +19,21 @@
 
   window.addPictures = function (data) {
     var fragment = document.createDocumentFragment();
+    var imgFilters = document.querySelector('.img-filters');
+    document.querySelector('.pictures');
     for (var i = 0; i < data.length; i++) {
       data[i]['pictureNumber'] = i + 1;
       fragment.appendChild(createPicture(data[i]));
     }
     window.data.usersPictures.appendChild(fragment);
+    imgFilters.classList.remove('img-filters--inactive');
   };
 
   var onLoad = function (data) {
-    window.addPictures(data);
-    window.clickBigPicture(data);
+    pictures = data;
+    originalPictures = data.slice();
+    updatePictures();
+    window.clickBigPicture(pictures);
   };
 
   window.backend.load(onLoad);
@@ -47,7 +52,7 @@
   var activeFilter = filterDefault;
   var imgFilters = document.querySelector('.img-filters__form');
 
-  function delBlocks() {
+  var delBlocks = function () {
     var usersPictures = document.querySelector('.pictures');
     var blocks = usersPictures.children;
     for (var i = blocks.length - 1; i >= 0; i--) {
@@ -56,7 +61,7 @@
       }
       usersPictures.removeChild(blocks[i]);
     }
-  }
+  };
 
   imgFilters.addEventListener('click', function (evt) {
     var filter = evt.target;
@@ -73,7 +78,7 @@
         case 'filter-random':
           delBlocks();
           randomPictures = [];
-          while (randomPictures.length < COUNT_RANDOM_PICTURES) {
+          while (randomPictures.length < 10) {
             var randomElement = getRandomElement(pictures);
             var repeatingElement = randomPictures.find(function (item) {
               return item === randomElement;

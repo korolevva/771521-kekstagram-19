@@ -4,14 +4,14 @@
     pictures: createArrayOfObjects(window.data.NUMBER_OBJECTS)
   };
 
-  function getRandomInt(min, max) {
+  var getRandomInt = function (min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
 
     return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
+  };
 
-  function getComments() {
+  var getComments = function () {
     var arrayOfComments = [];
 
     for (var i = 0; i < getRandomInt(5, 10); i++) {
@@ -23,9 +23,9 @@
     }
 
     return arrayOfComments;
-  }
+  };
 
-  function generateMessage(array) {
+  var generateMessage = function (array) {
     var arrayMessages = array.slice();
     if (getRandomInt(0, 1) === 0) {
       var randomMassage = getRandomInt(0, arrayMessages.length - 1);
@@ -40,13 +40,13 @@
       var secondRandomMessage = arrayMessages[numberSecondRandomMessage];
       return firstRandomMessage + ' ' + secondRandomMessage;
     }
-  }
+  };
 
-  function createArrayOfObjects(countObjects) {
+  var createArrayOfObjects = function (countObjects) {
     var arr = [];
     for (var i = 0; i < countObjects; i++) {
       arr.push({'url': 'photos/' + (i + 1) + '.jpg', 'description': 'Лучшее фото на свете!', 'likes': getRandomInt(15, 200), 'comments': getComments(), 'pictureNumber': (i + 1)});
     }
     return arr;
-  }
+  };
 })();

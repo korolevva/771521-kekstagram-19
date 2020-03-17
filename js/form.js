@@ -21,26 +21,26 @@
     return levelIntensity.toFixed(2);
   };
 
-  function addEffect(effectName) {
+  var addEffect = function (effectName) {
     previewImage.classList.remove(currentEffect);
     currentEffect = effectName;
     previewImage.classList.add(currentEffect);
     previewImage.style.filter = '';
-  }
+  };
 
-  function resetPositionPin() {
+  var resetPositionPin = function () {
     effectLevelPin.style.left = effectLevelLine.getBoundingClientRect().width + 'px';
     effectLevelDepth.style.width = effectLevelLine.getBoundingClientRect().width + 'px';
-  }
+  };
 
-  function applyEffect(effectName, levelIntensity) {
+  var applyEffect = function (effectName, levelIntensity) {
     addEffect(effectName);
     levelIntensity = window.data.MAX_LEVEL_INTENSITY_EFFECT;
     resetPositionPin();
     setIntensityEffect(effectName, levelIntensity);
-  }
+  };
 
-  function setIntensityEffect(effectName, levelIntensity) {
+  var setIntensityEffect = function (effectName, levelIntensity) {
     var objectEffect;
     for (var i = 0; i < window.data.COLOR_EFFECTS.length; i++) {
       if (effectName === window.data.COLOR_EFFECTS[i].className) {
@@ -55,7 +55,7 @@
     } else {
       previewImage.style.filter = objectEffect.filterName + '(' + levelIntensity + ') ';
     }
-  }
+  };
 
   var resetEffect = function () {
     if (previewImage.className !== '') {
@@ -65,7 +65,7 @@
     effectLevelFieldset.classList.add('hidden');
   };
 
-  function onChangeFilter(evt) {
+  var onChangeFilter = function (evt) {
     var inputRadio = evt.target;
     switch (inputRadio.id) {
       case 'effect-none':
@@ -92,7 +92,7 @@
         applyEffect('effects__preview--heat', getIntensityValue());
         break;
     }
-  }
+  };
 
   effectsList.addEventListener('change', onChangeFilter);
 

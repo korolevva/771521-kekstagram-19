@@ -1,7 +1,5 @@
 'use strict';
 (function () {
-  // var MESSAGES = ['Всё отлично!', 'В целом всё неплохо. Но не всё.', 'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.', 'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.', 'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.', 'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'];
-  // var NAMES = ['Иван', 'Хуан Себастьян', 'Мария', 'Кристоф', 'Виктор', 'Юлия', 'Люпита', 'Вашингтон'];
   var NUMBER_OBJECTS = 25;
   var ESC_KEY = 'Escape';
   var SCALE_MIN = 0;
@@ -53,11 +51,8 @@
   ];
 
   var usersPictures = document.querySelector('.pictures');
-  var body = document.querySelector('body');
 
   window.data = {
-    // MESSAGES: MESSAGES,
-    // NAMES: NAMES,
     NUMBER_OBJECTS: NUMBER_OBJECTS,
     ESC_KEY: ESC_KEY,
     SCALE_MIN: SCALE_MIN,
@@ -71,6 +66,5 @@
     SEPARATOR: SEPARATOR,
     COLOR_EFFECTS: COLOR_EFFECTS,
     usersPictures: usersPictures,
-    body: body,
   };
 })();
