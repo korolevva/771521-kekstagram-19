@@ -91,6 +91,8 @@
         effectLevelFieldset.classList.remove('hidden');
         applyEffect('effects__preview--heat', getIntensityValue());
         break;
+      default:
+        throw new Error('Неизвестный фильтр: «' + inputRadio.id + '»');
     }
   }
 
