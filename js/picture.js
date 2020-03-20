@@ -4,6 +4,7 @@
   var originalPictures = [];
   var randomPictures = [];
   var discussedPictures = [];
+
   var createPicture = function (picture) {
     var pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
     var pictureElement = pictureTemplate.cloneNode(true);
@@ -51,7 +52,7 @@
   var activeFilter = filterDefault;
   var imgFilters = document.querySelector('.img-filters__form');
 
-  function delBlocks() {
+  var delBlocks = function () {
     var usersPictures = document.querySelector('.pictures');
     var blocks = usersPictures.children;
     for (var i = blocks.length - 1; i >= 0; i--) {
@@ -60,7 +61,7 @@
       }
       usersPictures.removeChild(blocks[i]);
     }
-  }
+  };
 
   imgFilters.addEventListener('click', function (evt) {
     var filter = evt.target;
