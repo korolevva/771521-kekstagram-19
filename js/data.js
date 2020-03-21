@@ -2,7 +2,7 @@
 (function () {
   var NUMBER_OBJECTS = 25;
   var ESC_KEY = 'Escape';
-  var SCALE_MIN = 0;
+  var SCALE_MIN = 25;
   var SCALE_MAX = 100;
   var SCALE_DEFAULT = 1;
   var STEP_SCALE = 25;

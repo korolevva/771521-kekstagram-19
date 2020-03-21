@@ -68,7 +68,6 @@
   var createBigPicture = function (picture) {
     usersBigPictures.querySelector('.big-picture__img').firstElementChild.src = picture.url;
     usersBigPictures.querySelector('.likes-count').textContent = picture.likes;
-    usersBigPictures.querySelector('.comments-count').textContent = picture.comments.length;
     usersBigPictures.querySelector('.social__caption').textContent = picture.description;
     var bigPictureCancel = usersBigPictures.querySelector('.big-picture__cancel');
     bigPictureCancel.addEventListener('click', onBigPicturesButtonCloseClick);
@@ -103,8 +102,10 @@
   };
 
   window.clickBigPicture = function (data) {
-    window.data.usersPictures.addEventListener('click', function () {
-      onUsersPicturesClick(data);
+    window.data.usersPictures.addEventListener('click', function (evt) {
+      if (evt.target.className === 'picture__img') {
+        onUsersPicturesClick(data);
+      }
     });
   };
 })();

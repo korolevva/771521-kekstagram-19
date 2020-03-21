@@ -4,6 +4,17 @@
   var uploadFileClose = document.querySelector('#upload-cancel');
   var imageEditingForm = document.querySelector('.img-upload__overlay');
   var body = document.querySelector('body');
+  var form = document.querySelector('.img-upload__form');
+
+  var resetFields = function () {
+    window.validationFields.hashtagInput.style.outline = '';
+    form.reset();
+  };
+
+  var hideForm = function () {
+    imageEditingForm.classList.add('hidden');
+    body.classList.remove('modal-open');
+  };
 
   var onImageEditingFormOpen = function () {
     imageEditingForm.classList.remove('hidden');
@@ -15,22 +26,16 @@
 
   var onImageEditingFormClose = function () {
     window.form.resetEffect();
-    window.validationFields.hashtagInput.style.outline = '';
-    uploadFileOpen.value = '';
-    imageEditingForm.classList.add('hidden');
-    body.classList.remove('modal-open');
+    resetFields();
+    hideForm();
     document.removeEventListener('keydown', onImageEditingFormEsсPress);
   };
 
   var onImageEditingFormEsсPress = function (evt) {
     if (evt.key === window.data.ESC_KEY && evt.target.className !== 'text__hashtags' && evt.target.className !== 'text__description') {
       window.form.resetEffect();
-      window.validationFields.hashtagInput.style.outline = '';
-      window.validationFields.hashtagInput.value = '';
-      window.validationFields.textDescription.value = '';
-      uploadFileOpen.value = '';
-      imageEditingForm.classList.add('hidden');
-      body.classList.remove('modal-open');
+      resetFields();
+      hideForm();
     }
   };
 
@@ -39,6 +44,7 @@
 
   window.openForm = {
     imageEditingForm: imageEditingForm,
-    uploadFileOpen: uploadFileOpen
+    uploadFileOpen: uploadFileOpen,
+    resetFields: resetFields
   };
 })();

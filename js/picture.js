@@ -1,5 +1,6 @@
 'use strict';
 (function () {
+  var DEBOUNCE_INTERVAL = 500; // ms
   var pictures = [];
   var originalPictures = [];
   var randomPictures = [];
@@ -63,7 +64,7 @@
     }
   };
 
-  imgFilters.addEventListener('click', function (evt) {
+  var onImgFiltersClick = function (evt) {
     var filter = evt.target;
     if (filter !== activeFilter) {
       activeFilter.classList.remove('img-filters__button--active');
@@ -104,10 +105,11 @@
         default:
           throw new Error('Неизвестный фильтр: «' + filter.id + '»');
       }
-      window.debounce(function () {
-        updatePictures();
-      });
+      updatePictures();
     }
-  });
+  };
 
+  var debouncedOnImgFiltersClick = window.debounce(onImgFiltersClick, DEBOUNCE_INTERVAL);
+
+  imgFilters.addEventListener('click', debouncedOnImgFiltersClick);
 })();

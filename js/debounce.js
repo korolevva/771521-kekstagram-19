@@ -1,12 +1,19 @@
 'use strict';
 (function () {
-  var DEBOUNCE_INTERVAL = 500; // ms
+  window.debounce = function (callback, ms) {
+    var isCooldown = false;
 
-  var lastTimeout;
-  window.debounce = function (cb) {
-    if (lastTimeout) {
-      window.clearTimeout(lastTimeout);
-    }
-    lastTimeout = window.setTimeout(cb, DEBOUNCE_INTERVAL);
+    return function () {
+      if (isCooldown) {
+        return;
+      }
+
+      callback.apply(null, arguments);
+      isCooldown = true;
+
+      setTimeout(function () {
+        isCooldown = false;
+      }, ms);
+    };
   };
 })();

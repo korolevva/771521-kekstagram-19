@@ -7,7 +7,7 @@
 
   var filterItems = function (array, query) {
     return array.filter(function (el) {
-      return el === query;
+      return el.toLowerCase() === query.toLowerCase();
     });
   };
 
@@ -28,12 +28,12 @@
     if (tags.length > window.data.MAX_TAGS_COUNT) {
       return false;
     }
-
     var isValid = true;
     for (var i = 0; i < tags.length; i++) {
       var tag = tags[i];
       if (!isTagValid(tag, tags)) {
         isValid = false;
+        break;
       }
     }
     return isEmpty || isValid;
@@ -49,17 +49,11 @@
     }
   });
 
-  var resetFieldsForm = function () {
-    hashtagInput.value = '';
-    textDescription.value = '';
-  };
-
-  var resetParametersForm = function (massage) {
+  var resetParametersForm = function (message) {
     window.form.resetEffect();
-    resetFieldsForm();
-    window.openForm.uploadFileOpen.value = '';
+    window.openForm.resetFields();
 
-    var button = massage.querySelector('[type=button]');
+    var button = message.querySelector('[type=button]');
     button.removeAttribute('tabindex');
   };
 
@@ -71,85 +65,69 @@
     return messageElement;
   };
 
-  var showMassage = function (massage) {
+  var showMessage = function (message) {
     var main = document.querySelector('main');
-    main.insertAdjacentElement('afterbegin', massage);
+    main.insertAdjacentElement('afterbegin', message);
 
-    var button = massage.querySelector('[type=button]');
+    var button = message.querySelector('[type=button]');
     button.setAttribute('tabindex', '0');
     button.focus();
   };
 
-  var onButtonClick = function (massage) {
-    massage.classList.add('visually-hidden');
-    resetParametersForm(massage);
+  var onButtonClick = function (message) {
+    message.classList.add('visually-hidden');
+    resetParametersForm(message);
   };
 
-  var onMassageClick = function (evt, massage) {
+  var onMessageClick = function (evt, message) {
     if (evt.target.className !== 'success__inner') {
-      massage.classList.add('visually-hidden');
-      resetParametersForm(massage);
+      message.classList.add('visually-hidden');
+      resetParametersForm(message);
     }
   };
 
-  var onMassageEsсPress = function (evt, massage) {
+  var onMessageEsсPress = function (evt, message) {
     if (evt.key === window.data.ESC_KEY) {
-      massage.classList.add('visually-hidden');
-      resetParametersForm(massage);
+      message.classList.add('visually-hidden');
+      resetParametersForm(message);
     }
+  };
+
+  var gerenateMessage = function (messageTemplate) {
+    window.openForm.imageEditingForm.classList.add('hidden');
+    var message = createMessage(messageTemplate);
+    showMessage(message);
+    var button = message.querySelector('button');
+
+    button.addEventListener('click', function () {
+      onButtonClick(message);
+      document.removeEventListener('keydown', hideMassage);
+    });
+
+    message.addEventListener('click', function (evt) {
+      onMessageClick(evt, message);
+      document.removeEventListener('keydown', hideMassage);
+    });
+
+    var hideMassage = function (evt) {
+      onMessageEsсPress(evt, message);
+      document.removeEventListener('keydown', hideMassage);
+    };
+
+    document.addEventListener('keydown', hideMassage);
   };
 
   var onSuccessSendForm = function () {
-    window.openForm.imageEditingForm.classList.add('hidden');
-    var message = createMessage(successMessageTemplate);
-    showMassage(message);
-    var button = document.querySelector('.success__button');
-
-    button.addEventListener('click', function () {
-      onButtonClick(message);
-    });
-
-    message.addEventListener('click', function (evt) {
-      onMassageClick(evt, message);
-    });
-
-    document.addEventListener('keydown', function (evt) {
-      onMassageEsсPress(evt, message);
-
-      document.removeEventListener('keydown', function () {
-        onMassageEsсPress(evt, message);
-      });
-    });
-
+    gerenateMessage(successMessageTemplate);
   };
 
-  var onError = function () {
-    window.openForm.imageEditingForm.classList.add('hidden');
-    var message = createMessage(errorMessageTemplate);
-    showMassage(message);
-    var button = document.querySelector('.error__button');
-
-    button.addEventListener('click', function () {
-      onButtonClick(message);
-    });
-
-    message.addEventListener('click', function (evt) {
-      onMassageClick(evt, message);
-    });
-
-    document.addEventListener('keydown', function (evt) {
-      onMassageEsсPress(evt, message);
-
-      document.removeEventListener('keydown', function () {
-        onMassageEsсPress(evt, message);
-      });
-    });
-
+  var onErrorSendForm = function () {
+    gerenateMessage(errorMessageTemplate);
   };
 
   form.addEventListener('submit', function (evt) {
     evt.preventDefault();
-    window.backend.send(new FormData(form), onSuccessSendForm, onError);
+    window.backend.send(new FormData(form), onSuccessSendForm, onErrorSendForm);
   });
 
   window.validationFields = {
