@@ -105,11 +105,11 @@
         default:
           throw new Error('Неизвестный фильтр: «' + filter.id + '»');
       }
-      updatePictures();
+      debouncePictures();
     }
   };
 
-  var debouncedOnImgFiltersClick = window.debounce(onImgFiltersClick, DEBOUNCE_INTERVAL);
+  var debouncePictures = window.debounce(updatePictures, DEBOUNCE_INTERVAL);
 
-  imgFilters.addEventListener('click', debouncedOnImgFiltersClick);
+  imgFilters.addEventListener('click', onImgFiltersClick);
 })();
