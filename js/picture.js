@@ -1,6 +1,5 @@
 'use strict';
 (function () {
-  var DEBOUNCE_INTERVAL = 500; // ms
   var pictures = [];
   var originalPictures = [];
   var randomPictures = [];
@@ -109,7 +108,7 @@
     }
   };
 
-  var debouncePictures = window.debounce(updatePictures, DEBOUNCE_INTERVAL);
+  var debouncePictures = window.debounce(updatePictures);
 
   imgFilters.addEventListener('click', onImgFiltersClick);
 })();
